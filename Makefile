@@ -1,4 +1,4 @@
-all: dot png
+all: dot
 
 SCRIPT	:= ism.py
 OUTPUT	?= $(basename $(SCRIPT)).png
@@ -8,11 +8,15 @@ T	?= dot
 FLAGS	?= -o $(OUTPUT)
 
 ifneq ($(F),)
-    FOLDER = $(F)
+FOLDER = $(F)
 endif
 
 ifneq ($(G),)
-    FLAGS += -g $(G)
+FLAGS += -g $(G)
+endif
+
+ifneq ($(I),)
+FLAGS += -i $(I)
 endif
 
 ifeq ($(V),1)
@@ -22,10 +26,11 @@ endif
 dump: dot
 	cat $(DOTFILE)
 
+.PHONY: dot
 dot:
 	./$(SCRIPT) $(FLAGS) $(FOLDER)
 
-png: dot
+png:
 	$(T) -Tpng $(DOTFILE) -o $(OUTPUT)
 
 clean:

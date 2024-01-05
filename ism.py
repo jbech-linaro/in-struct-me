@@ -23,9 +23,15 @@ def my_parser():
 
     parser.add_argument(
         '-g', '--grep',
-        default="",
+        default='',
         required=False,
         help='Highlight items matching this')
+
+    parser.add_argument(
+        '-i', '--ignore-file',
+        default='ignores/ignore.txt',
+        required=False,
+        help='Ignore file to use (default ignore.txt)')
 
     parser.add_argument(
         '-o', '--outfile',
@@ -112,12 +118,11 @@ def is_ignored(struct_name, ignore_patterns):
     return False
 
 
-def create_dag(structs):
+def create_dag(args, structs):
     struct_dict = {}
 
-    ignore_file_path = 'ignore.txt'
     ignore_patterns = None
-    with open(ignore_file_path, 'r') as ignore_file:
+    with open(args.ignore_file, 'r') as ignore_file:
         ignore_patterns = [line.strip() for line in ignore_file]
 
     for struct_name, struct_members in structs.items():
@@ -222,6 +227,6 @@ if __name__ == "__main__":
         print("Verbose enabled")
 
     result = process_files(args.path)
-    struct_dict = create_dag(result)
+    struct_dict = create_dag(args, result)
     create_graphviz(struct_dict, result, args)
     generate_png(args)

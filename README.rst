@@ -66,7 +66,7 @@ Once installed, here's how you can use In-Struct-Me:
 
       make F=~/linux_kernel/drivers/tee
 
-  or to scan multiple folders
+   or to scan multiple folders
 
    .. code:: bash
 
