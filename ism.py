@@ -41,6 +41,7 @@ def my_parser():
 
     parser.add_argument(
         "path",
+        nargs='+',
         help="Source location")
 
     return parser.parse_args()
@@ -82,15 +83,17 @@ def process_file(file_path):
         return extract_structs(file_content)
 
 
-def process_files(folder_path='.'):
+def process_files(folder_path):
     all_structs = defaultdict(list)
-    for root, dirs, files in os.walk(folder_path):
-        for file_name in files:
-            if file_name.endswith(('.c', '.h')):
-                file_path = os.path.join(root, file_name)
-                file_structs = process_file(file_path)
-                for struct_name, struct_members in file_structs.items():
-                    all_structs[struct_name].extend(struct_members)
+    for path in folder_path:
+        print(f"Parsing {path} ...")
+        for root, dirs, files in os.walk(path):
+            for file_name in files:
+                if file_name.endswith(('.c', '.h')):
+                    file_path = os.path.join(root, file_name)
+                    file_structs = process_file(file_path)
+                    for struct_name, struct_members in file_structs.items():
+                        all_structs[struct_name].extend(struct_members)
     return all_structs
 
 
