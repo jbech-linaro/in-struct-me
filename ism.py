@@ -2,9 +2,13 @@
 
 import argparse
 import os
-import sys
 import re
+import subprocess
+import sys
 from collections import defaultdict
+
+
+DEFAULT_DOT_FILE = "dag_graph.dot"
 
 
 def my_parser():
@@ -13,10 +17,20 @@ def my_parser():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument(
+        '-c', '--command',
+        default='dot',
+        help='The Graphviz command to use')
+
+    parser.add_argument(
         '-g', '--grep',
         default="",
         required=False,
         help='Highlight items matching this')
+
+    parser.add_argument(
+        '-o', '--outfile',
+        default="ism.png",
+        help='The name of the produced png (default ism.png)')
 
     parser.add_argument(
         '-v', '--verbose',
@@ -150,8 +164,19 @@ def grep_colorize(node_data, key, original_dict, args):
     return node_data
 
 
+def generate_png(args):
+    try:
+        subprocess.run([args.command, "-Tpng", DEFAULT_DOT_FILE, "-o",
+                        args.outfile], check=True)
+        print(f"Image file '{args.outfile}' "
+              f"generated successfully using {args.command}.")
+
+    except subprocess.CalledProcessError as e:
+        print(f"Error generating image file: {e}")
+
+
 def write_dot_file(args, dot_data):
-    with open('dag_graph.dot', 'w') as dot_file:
+    with open(DEFAULT_DOT_FILE, 'w') as dot_file:
         dot_file.write('digraph DAG {\n')
         if args.verbose:
             dot_file.write('graph [ rankdir = "LR", labeljust=l ];\n')
@@ -181,7 +206,7 @@ def create_graphviz(struct_dict, original_dict, args):
             dot_data.append(f'"{key}" -> "{value}";')
 
     write_dot_file(args, dot_data)
-    print("DOT file 'dag_graph.dot' has been generated.")
+    print(f"DOT file '{DEFAULT_DOT_FILE}' has been generated.")
 
 
 if __name__ == "__main__":
@@ -196,3 +221,4 @@ if __name__ == "__main__":
     result = process_files(args.path)
     struct_dict = create_dag(result)
     create_graphviz(struct_dict, result, args)
+    generate_png(args)

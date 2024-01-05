@@ -73,6 +73,18 @@ Once installed, here's how you can use In-Struct-Me:
 
       make T=circo
 
+6. Use another ignore file than the default
+
+   .. code:: bash
+
+      make I=another-ignore-file.txt
+
+7. Generate a PNG with a user specified name
+
+   .. code:: bash
+
+      make O=another-name.png
+
 Configuration
 -------------
 
