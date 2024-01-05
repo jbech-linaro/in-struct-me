@@ -1,11 +1,11 @@
 all: dot
 
 SCRIPT	:= ism.py
-OUTPUT	?= $(basename $(SCRIPT)).png
+O	?= $(basename $(SCRIPT)).png
 DOTFILE	?= dag_graph.dot
 FOLDER	?= $(PWD)
 T	?= dot
-FLAGS	?= -o $(OUTPUT)
+FLAGS	?= -o $(O)
 
 ifneq ($(F),)
 FOLDER = $(F)
@@ -31,7 +31,7 @@ dot:
 	./$(SCRIPT) $(FLAGS) $(FOLDER)
 
 png:
-	$(T) -Tpng $(DOTFILE) -o $(OUTPUT)
+	$(T) -Tpng $(DOTFILE) -o $(O)
 
 clean:
 	rm *.png *.dot
