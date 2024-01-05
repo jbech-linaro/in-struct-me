@@ -5,7 +5,7 @@ O	?= $(basename $(SCRIPT)).png
 DOTFILE	?= dag_graph.dot
 FOLDER	?= $(PWD)
 T	?= dot
-FLAGS	?= -o $(O)
+FLAGS	?= -o $(O) -c $(T)
 
 ifneq ($(F),)
 FOLDER = $(F)
